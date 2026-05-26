@@ -68,14 +68,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
 .field-err.show { display: block; }
 .field input.err, .field select.err { border-color: var(--red); }
 
-/* File upload */
-.file-zone { border: 1.5px dashed var(--gold); border-radius: var(--r); padding: 14px 12px;
-  background: #FFFDF5; cursor: pointer; text-align: center; transition: background 0.2s; }
-.file-zone:hover { background: var(--gold-bg); }
-.file-zone input[type=file] { display: none; }
-.file-zone-text { font-size: 13px; color: var(--gold-dk); }
-.file-zone-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
-.file-chosen { font-size: 12px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
 
 /* Checkboxes */
 .checks { display: flex; flex-direction: column; gap: 10px; }
@@ -279,16 +272,14 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
       </div>
     </div>
 
-    <!-- Upload -->
+    <!-- WhatsApp photo notice -->
     <div class="sec">
       <div class="sec-title" id="txt-sec-upload">הוכחת שירות מילואים</div>
-      <label class="file-zone" for="inp-file">
-        <input type="file" id="inp-file" accept="image/*,.pdf,.heic" onchange="onFileChosen()">
-        <div class="file-zone-text" id="txt-upload-main">📷 לחץ/י להעלאת תמונה או קובץ</div>
-        <div class="file-zone-sub" id="txt-upload-sub">תמונת כרטיס מילואים, JPG, PNG, PDF עד 10MB</div>
-      </label>
-      <div class="file-chosen" id="file-chosen-name"></div>
-      <div class="field-err" id="err-file"></div>
+      <div class="disc" id="txt-whatsapp-notice">
+        לאחר הגשת הטופס, שלח/י תמונה של כרטיס המילואים שלך לווצאפ:<br>
+        <strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br>
+        <span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>
+      </div>
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="submitForm()" id="txt-submit-btn">שלח/י בקשה</button>
@@ -304,8 +295,7 @@ const BACKEND_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 // ── State ──────────────────────────────────────────────────────────────────
 let lang = 'he';
 let nightsRemaining = 0;
-let imageData = null;
-let imageMime = null;
+
 
 // ── Translations ───────────────────────────────────────────────────────────
 const T = {
@@ -318,7 +308,7 @@ const T = {
     closedTitle: 'המחזור הנוכחי הגיע למכסתו',
     closedBody: 'תודה על שירותך.<br>ניתן להירשם מחדש כאשר יפתח המחזור הבא.',
     submittedTitle: 'בקשתך התקבלה',
-    submittedBody: 'תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.',
+    submittedBody: 'תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.<br><br>חשוב: שלח/י תמונה של כרטיס המילואים לווצאפ <a href="https://wa.me/972586200779" style="color:var(--gold-dk)">+972-58-620-0779</a><br>ציין/י את שמך המלא בהודעה.',
     discIntro: 'תוכנית זו מיועדת לחיילי מילואים פעילים ובני/בנות זוגם. שימו לב:',
     discList: [
       '<strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לסידור שינה נפרד.',
@@ -374,7 +364,7 @@ const T = {
     closedTitle: 'This cycle is now full',
     closedBody: 'Thank you for your service.<br>Registration will reopen for the next cycle.',
     submittedTitle: 'Your application has been received',
-    submittedBody: 'Thank you for your service to the State of Israel.<br>We will respond within 48 hours.',
+    submittedBody: 'Thank you for your service to the State of Israel.<br>We will respond within 48 hours.<br><br>Important: please send a photo of your miluim card to WhatsApp <a href="https://wa.me/972586200779" style="color:var(--gold-dk)">+972-58-620-0779</a><br>Include your full name in the message.',
     discIntro: 'This program is for active IDF reservists and their partners. Please note:',
     discList: [
       '<strong>Couples only</strong> – all rooms have one double bed. Not suitable for guests requiring separate sleeping arrangements.',
@@ -486,7 +476,7 @@ async function loadQuota() {
     return;
   }
   try {
-    const res = await fetch(BACKEND_URL);
+    const res = await fetch(BACKEND_URL + '?action=quota');
     const data = await res.json();
     nightsRemaining = data.nightsRemaining;
     if (!data.isOpen) { showState('state-closed'); return; }
@@ -570,48 +560,7 @@ function syncRooms(changed) {
   });
 }
 
-// ── File upload ────────────────────────────────────────────────────────────
-function onFileChosen() {
-  const file = document.getElementById('inp-file').files[0];
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) {
-    showFieldErr('err-file', 'הקובץ גדול מ-10MB');
-    return;
-  }
-  clearFieldErr('err-file');
-  document.getElementById('file-chosen-name').textContent = file.name;
 
-  if (file.type.startsWith('image/')) {
-    // Compress image
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.onload = () => {
-        const MAX = 1200;
-        let w = img.width, h = img.height;
-        if (w > MAX || h > MAX) {
-          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
-          else { w = Math.round(w * MAX / h); h = MAX; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        imageData = canvas.toDataURL('image/jpeg', 0.82);
-        imageMime = 'image/jpeg';
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    // PDF: send as-is
-    const reader = new FileReader();
-    reader.onload = e => {
-      imageData = e.target.result;
-      imageMime = file.type;
-    };
-    reader.readAsDataURL(file);
-  }
-}
 
 // ── Validation helpers ─────────────────────────────────────────────────────
 function showFieldErr(id, msg) {
@@ -658,7 +607,7 @@ async function submitForm() {
     }
   }
   if (!room1) { fieldErr('inp-room1','err-room1', t('errRoom')); valid = false; }
-  if (!imageData) { showFieldErr('err-file', t('errFile')); valid = false; }
+
 
   const checks = ['chk-reservist','chk-couple','chk-rules'];
   if (!checks.every(id => document.getElementById(id).checked)) {
@@ -682,31 +631,44 @@ async function submitForm() {
     lang,
   };
 
-  if (BACKEND_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+  if (BACKEND_URL === 'https://script.google.com/macros/s/AKfycbxFlwvSrvNyDleA3RQ5QaromJihw0a98lyK7HPDEfzbH0FZwRJ3aGkye5T_-41D4OMk/exec') {
     // Preview mode
     setTimeout(() => showState('state-submitted'), 1200);
     return;
   }
 
   try {
-    // Use no-cors to bypass Google Apps Script CORS limitations.
-    // The data is sent and saved successfully -- we just cannot read
-    // the response, so we optimistically show the success state.
-    await fetch(BACKEND_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload),
+    // Send via GET with encoded params -- avoids all CORS issues with Apps Script
+    const params = new URLSearchParams({
+      name:     payload.name,
+      phone:    payload.phone,
+      checkin:  payload.checkin,
+      checkout: payload.checkout,
+      nights:   payload.nights,
+      room1:    payload.room1,
+      room2:    payload.room2 || '',
+      room3:    payload.room3 || '',
+      lang:     payload.lang,
     });
-    showState('state-submitted');
-    // Refresh quota silently in background after a short delay
-    setTimeout(async () => {
-      try {
-        const qRes = await fetch(BACKEND_URL);
-        const qData = await qRes.json();
-        nightsRemaining = qData.nightsRemaining;
-      } catch(e) {}
-    }, 3000);
+    const res = await fetch(BACKEND_URL + '?action=submit&' + params.toString());
+    const data = await res.json();
+
+    if (data.success) {
+      nightsRemaining = data.nightsRemaining;
+      showState('state-submitted');
+    } else if (data.error === 'cycle_full') {
+      showState('state-closed');
+    } else if (data.error === 'not_enough_nights') {
+      nightsRemaining = data.nightsRemaining;
+      updateNightsUI();
+      const el = document.getElementById('form-err');
+      el.textContent = t('errNotEnough');
+      el.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = t('submitBtn');
+    } else {
+      throw new Error('unknown');
+    }
   } catch(e) {
     const el = document.getElementById('form-err');
     el.textContent = t('errGeneral');
