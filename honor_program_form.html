@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אורח כבוד | Guest of Honor</title>
+<style>
+:root {
+  --gold: #B8860B; --gold-dk: #8B6914; --gold-bg: #FFF8E7;
+  --ink: #2C1810; --muted: #5C4A30; --border: #D4C4A0;
+  --red: #C0392B; --red-bg: #FDF0F0;
+  --r: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: transparent; color: var(--ink); font-size: 14px; }
+.wrap { max-width: 660px; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+
+/* Language toggle */
+.lang-btn { background: none; border: none; color: var(--gold-dk); font-size: 12px;
+  cursor: pointer; text-decoration: underline; float: left; padding: 2px 0; }
+.clearfix::after { content:''; display:block; clear:both; }
+
+/* Header */
+.prog-header { text-align: center; padding: 1rem 0 0.75rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.25rem; }
+.prog-title { font-size: 20px; color: var(--gold-dk); letter-spacing: 0.12em; margin-bottom: 3px; }
+.prog-sub { font-size: 12px; color: var(--muted); }
+.nights-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--gold-bg);
+  border: 1px solid var(--gold); border-radius: var(--r); padding: 7px 16px; margin-top: 0.75rem; }
+.nights-n { font-size: 22px; font-weight: bold; color: var(--gold-dk); line-height: 1; }
+.nights-label { font-size: 12px; color: var(--muted); }
+
+/* States */
+.state { display: none; }
+.state.active { display: block; }
+.state-center { text-align: center; padding: 2.5rem 1rem; }
+.state-icon { font-size: 36px; margin-bottom: 0.75rem; }
+.state-title { font-size: 18px; color: var(--gold-dk); margin-bottom: 0.5rem; }
+.state-text { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border);
+  border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Disclaimer box */
+.disc { background: var(--gold-bg); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 0.85rem 1rem; margin-bottom: 1rem; font-size: 12px; color: var(--muted); line-height: 1.75; }
+.disc a { color: var(--gold-dk); }
+.disc ul { padding-right: 1.25rem; padding-left: 1.25rem; margin-top: 0.4rem; }
+.disc li { margin-bottom: 2px; }
+.disc strong { color: var(--ink); }
+
+/* Section */
+.sec { margin-bottom: 1.25rem; }
+.sec-title { font-size: 11px; letter-spacing: 0.18em; color: var(--gold-dk); text-transform: uppercase;
+  margin-bottom: 0.75rem; padding-bottom: 4px; border-bottom: 0.5px solid var(--border); }
+
+/* Fields */
+.field { margin-bottom: 0.9rem; }
+.field label { display: block; font-size: 12px; color: var(--gold-dk); font-weight: bold;
+  letter-spacing: 0.06em; margin-bottom: 5px; }
+.field input[type=text], .field input[type=tel], .field input[type=date], .field select {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--r);
+  font-size: 14px; color: var(--ink); background: white; font-family: Arial, sans-serif; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(184,134,11,0.12); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.field-err { font-size: 11px; color: var(--red); margin-top: 4px; display: none; }
+.field-err.show { display: block; }
+.field input.err, .field select.err { border-color: var(--red); }
+
+/* File upload */
+.file-zone { border: 1.5px dashed var(--gold); border-radius: var(--r); padding: 14px 12px;
+  background: #FFFDF5; cursor: pointer; text-align: center; transition: background 0.2s; }
+.file-zone:hover { background: var(--gold-bg); }
+.file-zone input[type=file] { display: none; }
+.file-zone-text { font-size: 13px; color: var(--gold-dk); }
+.file-zone-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.file-chosen { font-size: 12px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+/* Checkboxes */
+.checks { display: flex; flex-direction: column; gap: 10px; }
+.check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px;
+  color: var(--ink); line-height: 1.5; cursor: pointer; }
+.check-item input[type=checkbox] { width: 17px; height: 17px; flex-shrink: 0; margin-top: 2px; accent-color: var(--gold); }
+.check-item a { color: var(--gold-dk); }
+
+/* Room prefs */
+.room-prefs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.pref-wrap label { margin-bottom: 3px; }
+
+/* Submit */
+.submit-btn { width: 100%; padding: 13px; background: var(--gold); color: white; border: none;
+  border-radius: var(--r); font-size: 15px; font-family: Arial, sans-serif;
+  letter-spacing: 0.1em; cursor: pointer; margin-top: 0.75rem; transition: background 0.2s; }
+.submit-btn:hover:not(:disabled) { background: var(--gold-dk); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.form-err { background: var(--red-bg); border: 1px solid #E8BCBC; border-radius: var(--r);
+  padding: 10px 12px; font-size: 13px; color: var(--red); margin-top: 0.5rem;
+  text-align: center; display: none; }
+.form-err.show { display: block; }
+
+/* Warning strip for limited nights */
+.nights-warning { background: #FFF3CD; border: 1px solid #FFC107; border-radius: var(--r);
+  padding: 8px 12px; font-size: 12px; color: #856404; margin-bottom: 1rem; display: none; }
+.nights-warning.show { display: block; }
+
+@media (max-width: 480px) {
+  .field-row { grid-template-columns: 1fr; }
+  .room-prefs { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Language toggle -->
+  <div class="clearfix">
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">English</button>
+  </div>
+
+  <!-- ── LOADING ────────────────────────────────────────── -->
+  <div class="state active" id="state-loading">
+    <div class="state-center">
+      <div class="spinner"></div>
+      <div class="state-text" id="txt-loading">טוען...</div>
+    </div>
+  </div>
+
+  <!-- ── CLOSED ─────────────────────────────────────────── -->
+  <div class="state" id="state-closed">
+    <div class="prog-header">
+      <div class="prog-title" id="txt-title">אורח כבוד</div>
+      <div class="prog-sub" id="txt-sub-closed">מלון בוטיק קריית האמנים, צפת</div>
+    </div>
+    <div class="state-center">
+      <div class="state-icon">🎖</div>
+      <div class="state-title" id="txt-closed-title">המחזור הנוכחי הגיע למכסתו</div>
+      <div class="state-text" id="txt-closed-body">תודה על שירותך.<br>ניתן להירשם מחדש כאשר יפתח המחזור הבא.</div>
+    </div>
+  </div>
+
+  <!-- ── SUBMITTED ───────────────────────────────────────── -->
+  <div class="state" id="state-submitted">
+    <div class="prog-header">
+      <div class="prog-title">אורח כבוד</div>
+    </div>
+    <div class="state-center">
+      <div class="state-icon">✉️</div>
+      <div class="state-title" id="txt-submitted-title">בקשתך התקבלה</div>
+      <div class="state-text" id="txt-submitted-body">תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.</div>
+    </div>
+  </div>
+
+  <!-- ── FORM ────────────────────────────────────────────── -->
+  <div class="state" id="state-form">
+
+    <div class="prog-header">
+      <div class="prog-title" id="txt-prog-title">אורח כבוד</div>
+      <div class="prog-sub" id="txt-prog-sub">מלון בוטיק קריית האמנים, צפת</div>
+      <div class="nights-badge">
+        <span class="nights-n" id="nights-display">–</span>
+        <span class="nights-label" id="txt-nights-label">לילות פנויים במחזור הנוכחי</span>
+      </div>
+    </div>
+
+    <div class="nights-warning" id="nights-warning">
+      <span id="txt-nights-warning"></span>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disc">
+      <span id="txt-disc-intro">תוכנית זו מיועדת לחיילי מילואים פעילים ובני/בנות זוגם. שימו לב:</span>
+      <ul id="txt-disc-list">
+        <li><strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לאנשים המעוניינים בסידור שינה נפרד.</li>
+        <li><strong>תינוקות עד גיל שנה בלבד</strong> – ילד שיגיע מעל גיל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.</li>
+        <li><strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.</li>
+        <li>שהייה מינימלית: 2 לילות | מקסימלית: 3 לילות.</li>
+        <li>אישור תוך 48 שעות מהגשה. הזמנות מאושרות לפי סדר הגשה.</li>
+        <li><a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank" id="txt-house-rules-link">כל תקנון הבית חל על שהייה זו ←</a></li>
+      </ul>
+    </div>
+
+    <!-- Eligibility checkboxes -->
+    <div class="sec">
+      <div class="sec-title" id="txt-sec-eligibility">תנאי זכאות</div>
+      <div class="checks">
+        <label class="check-item">
+          <input type="checkbox" id="chk-reservist">
+          <span id="txt-chk-reservist">אני חייל/ת מילואים פעיל/ה</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="chk-couple">
+          <span id="txt-chk-couple">ההזמנה היא לזוג המשתף חדר עם מיטה זוגית אחת</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="chk-rules">
+          <span id="txt-chk-rules">קראתי ומסכים/ה ל<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">תקנון הבית</a></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" id="chk-baby">
+          <span id="txt-chk-baby">אם יש ילד מלווה, הוא/היא מתחת לגיל 12 חודשים</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Personal details -->
+    <div class="sec">
+      <div class="sec-title" id="txt-sec-details">פרטים אישיים</div>
+      <div class="field">
+        <label id="txt-lbl-name">שם מלא</label>
+        <input type="text" id="inp-name" autocomplete="name">
+        <div class="field-err" id="err-name"></div>
+      </div>
+      <div class="field">
+        <label id="txt-lbl-phone">מספר טלפון (ווצאפ)</label>
+        <input type="tel" id="inp-phone" autocomplete="tel" dir="ltr">
+        <div class="field-hint" id="txt-hint-phone">לדוגמה: 0501234567</div>
+        <div class="field-err" id="err-phone"></div>
+      </div>
+    </div>
+
+    <!-- Dates -->
+    <div class="sec">
+      <div class="sec-title" id="txt-sec-dates">תאריכי שהייה</div>
+      <div class="field-row">
+        <div class="field">
+          <label id="txt-lbl-checkin">תאריך כניסה</label>
+          <input type="date" id="inp-checkin" onchange="onDatesChange()">
+          <div class="field-err" id="err-checkin"></div>
+        </div>
+        <div class="field">
+          <label id="txt-lbl-checkout">תאריך יציאה</label>
+          <input type="date" id="inp-checkout" onchange="onDatesChange()">
+          <div class="field-err" id="err-checkout"></div>
+        </div>
+      </div>
+      <div class="field-hint" id="txt-hint-dates">שהייה מינימלית 2 לילות, מקסימלית 3 לילות. אין צ׳ק-אין בשבת או חגים.</div>
+      <div class="field-err show" id="err-nights" style="display:none;"></div>
+    </div>
+
+    <!-- Room preferences -->
+    <div class="sec">
+      <div class="sec-title" id="txt-sec-rooms">העדפת חדרים</div>
+      <div class="room-prefs">
+        <div class="pref-wrap field">
+          <label id="txt-lbl-room1">עדיפות ראשונה</label>
+          <select id="inp-room1" onchange="syncRooms(1)">
+            <option value="" id="opt-select">-- בחר/י --</option>
+            <option value="צביה">צביה / Tzviya</option>
+            <option value="אריה">אריה / Aryeh</option>
+            <option value="ליאנה">ליאנה / Liana</option>
+            <option value="אביטל">אביטל / Avital</option>
+            <option value="אורלי">אורלי / Orly</option>
+          </select>
+          <div class="field-err" id="err-room1"></div>
+        </div>
+        <div class="pref-wrap field">
+          <label id="txt-lbl-room2">עדיפות שנייה</label>
+          <select id="inp-room2" onchange="syncRooms(2)">
+            <option value="">-- אופציונלי --</option>
+            <option value="צביה">צביה / Tzviya</option>
+            <option value="אריה">אריה / Aryeh</option>
+            <option value="ליאנה">ליאנה / Liana</option>
+            <option value="אביטל">אביטל / Avital</option>
+            <option value="אורלי">אורלי / Orly</option>
+          </select>
+        </div>
+        <div class="pref-wrap field">
+          <label id="txt-lbl-room3">עדיפות שלישית</label>
+          <select id="inp-room3" onchange="syncRooms(3)">
+            <option value="">-- אופציונלי --</option>
+            <option value="צביה">צביה / Tzviya</option>
+            <option value="אריה">אריה / Aryeh</option>
+            <option value="ליאנה">ליאנה / Liana</option>
+            <option value="אביטל">אביטל / Avital</option>
+            <option value="אורלי">אורלי / Orly</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload -->
+    <div class="sec">
+      <div class="sec-title" id="txt-sec-upload">הוכחת שירות מילואים</div>
+      <label class="file-zone" for="inp-file">
+        <input type="file" id="inp-file" accept="image/*,.pdf,.heic" onchange="onFileChosen()">
+        <div class="file-zone-text" id="txt-upload-main">📷 לחץ/י להעלאת תמונה או קובץ</div>
+        <div class="file-zone-sub" id="txt-upload-sub">תמונת כרטיס מילואים, JPG, PNG, PDF עד 10MB</div>
+      </label>
+      <div class="file-chosen" id="file-chosen-name"></div>
+      <div class="field-err" id="err-file"></div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitForm()" id="txt-submit-btn">שלח/י בקשה</button>
+    <div class="form-err" id="form-err"></div>
+
+  </div><!-- /state-form -->
+</div><!-- /wrap -->
+
+<script>
+// ── Configuration ──────────────────────────────────────────────────────────
+const BACKEND_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// ── State ──────────────────────────────────────────────────────────────────
+let lang = 'he';
+let nightsRemaining = 0;
+let imageData = null;
+let imageMime = null;
+
+// ── Translations ───────────────────────────────────────────────────────────
+const T = {
+  he: {
+    langBtn: 'English',
+    loading: 'טוען...',
+    title: 'אורח כבוד',
+    sub: 'מלון בוטיק קריית האמנים, צפת',
+    nightsLabel: 'לילות פנויים במחזור הנוכחי',
+    closedTitle: 'המחזור הנוכחי הגיע למכסתו',
+    closedBody: 'תודה על שירותך.<br>ניתן להירשם מחדש כאשר יפתח המחזור הבא.',
+    submittedTitle: 'בקשתך התקבלה',
+    submittedBody: 'תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.',
+    discIntro: 'תוכנית זו מיועדת לחיילי מילואים פעילים ובני/בנות זוגם. שימו לב:',
+    discList: [
+      '<strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לסידור שינה נפרד.',
+      '<strong>תינוקות עד גיל שנה בלבד</strong> – ילד מעל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.',
+      '<strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.',
+      'שהייה מינימלית: 2 לילות | מקסימלית: 3 לילות.',
+      'אישור תוך 48 שעות. הזמנות לפי סדר הגשה.',
+      '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">כל תקנון הבית חל ←</a>',
+    ],
+    secEligibility: 'תנאי זכאות',
+    chkReservist: 'אני חייל/ת מילואים פעיל/ה',
+    chkCouple: 'ההזמנה היא לזוג המשתף חדר עם מיטה זוגית אחת',
+    chkRules: 'קראתי ומסכים/ה ל<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">תקנון הבית</a>',
+    chkBaby: 'אם יש ילד מלווה, הוא/היא מתחת לגיל 12 חודשים',
+    secDetails: 'פרטים אישיים',
+    lblName: 'שם מלא',
+    lblPhone: 'מספר טלפון (ווצאפ)',
+    hintPhone: 'לדוגמה: 0501234567',
+    secDates: 'תאריכי שהייה',
+    lblCheckin: 'תאריך כניסה',
+    lblCheckout: 'תאריך יציאה',
+    hintDates: 'שהייה מינימלית 2 לילות, מקסימלית 3 לילות. אין צ׳ק-אין בשבת או חגים.',
+    secRooms: 'העדפת חדרים',
+    lblRoom1: 'עדיפות ראשונה',
+    lblRoom2: 'עדיפות שנייה',
+    lblRoom3: 'עדיפות שלישית',
+    secUpload: 'הוכחת שירות מילואים',
+    uploadMain: '📷 לחץ/י להעלאת תמונה או קובץ',
+    uploadSub: 'תמונת כרטיס מילואים — JPG, PNG, PDF עד 10MB',
+    submitBtn: 'שלח/י בקשה',
+    submitting: 'שולח...',
+    nightsOnly2: 'נותרו 2 לילות בלבד — ניתן להזמין שהייה של 2 לילות בלבד.',
+    errName: 'נא להזין שם מלא',
+    errPhone: 'נא להזין מספר טלפון תקין',
+    errCheckin: 'נא לבחור תאריך כניסה',
+    errCheckout: 'נא לבחור תאריך יציאה',
+    errNights23: 'שהייה חייבת להיות 2 או 3 לילות',
+    errNightsMax: 'לא נותרו לילות מספיקים במחזור זה לשהייה המבוקשת',
+    errRoom: 'נא לבחור עדיפות ראשונה לחדר',
+    errFile: 'נא להעלות תעודת מילואים',
+    errChecks: 'יש לאשר את כל תנאי הזכאות',
+    errGeneral: 'אירעה שגיאה. אנא נסה/י שוב.',
+    errCycleFull: 'המחזור הנוכחי הגיע למכסתו. ההרשמה סגורה.',
+    errNotEnough: 'לא נותרים מספיק לילות עבור השהייה המבוקשת.',
+    dir: 'rtl',
+  },
+  en: {
+    langBtn: 'עברית',
+    loading: 'Loading...',
+    title: 'Guest of Honor',
+    sub: 'Artists\' Colony Inn, Tzfat',
+    nightsLabel: 'nights available in current cycle',
+    closedTitle: 'This cycle is now full',
+    closedBody: 'Thank you for your service.<br>Registration will reopen for the next cycle.',
+    submittedTitle: 'Your application has been received',
+    submittedBody: 'Thank you for your service to the State of Israel.<br>We will respond within 48 hours.',
+    discIntro: 'This program is for active IDF reservists and their partners. Please note:',
+    discList: [
+      '<strong>Couples only</strong> – all rooms have one double bed. Not suitable for guests requiring separate sleeping arrangements.',
+      '<strong>Infants under 12 months only</strong> – a child over 12 months will result in cancellation of the reservation and refusal of entry.',
+      '<strong>Token contribution: ₪200 per night</strong>, payable by miluim card at check-in.',
+      'Minimum stay: 2 nights | Maximum: 3 nights.',
+      'Response within 48 hours. Applications approved in order of submission.',
+      '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">All house rules apply →</a>',
+    ],
+    secEligibility: 'Eligibility',
+    chkReservist: 'I am an active IDF reservist',
+    chkCouple: 'This booking is for a couple sharing one double-bed room',
+    chkRules: 'I have read and agree to the <a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">house rules</a>',
+    chkBaby: 'Any accompanying child is under 12 months of age',
+    secDetails: 'Personal Details',
+    lblName: 'Full name',
+    lblPhone: 'Phone number (WhatsApp)',
+    hintPhone: 'e.g. +972-50-123-4567',
+    secDates: 'Stay Dates',
+    lblCheckin: 'Check-in date',
+    lblCheckout: 'Check-out date',
+    hintDates: 'Minimum 2 nights, maximum 3 nights. No check-in on Shabbat or Jewish holidays.',
+    secRooms: 'Room Preferences',
+    lblRoom1: '1st choice',
+    lblRoom2: '2nd choice',
+    lblRoom3: '3rd choice',
+    secUpload: 'Proof of Reservist Service',
+    uploadMain: '📷 Click to upload a photo or file',
+    uploadSub: 'Miluim card photo — JPG, PNG, PDF up to 10MB',
+    submitBtn: 'Submit Application',
+    submitting: 'Submitting...',
+    nightsOnly2: 'Only 2 nights remain — you may book a 2-night stay only.',
+    errName: 'Please enter your full name',
+    errPhone: 'Please enter a valid phone number',
+    errCheckin: 'Please select a check-in date',
+    errCheckout: 'Please select a check-out date',
+    errNights23: 'Stay must be 2 or 3 nights',
+    errNightsMax: 'Not enough nights available in this cycle for your requested stay',
+    errRoom: 'Please select a first room preference',
+    errFile: 'Please upload your miluim card',
+    errChecks: 'Please confirm all eligibility conditions',
+    errGeneral: 'An error occurred. Please try again.',
+    errCycleFull: 'This cycle is now full. Registration is closed.',
+    errNotEnough: 'Not enough nights remaining for your requested stay.',
+    dir: 'ltr',
+  }
+};
+
+// ── Language ───────────────────────────────────────────────────────────────
+function t(key) { return T[lang][key] || T.he[key] || ''; }
+
+function applyLang() {
+  document.querySelectorAll('.wrap').forEach(el => el.style.direction = t('dir'));
+  const t2 = T[lang];
+  document.getElementById('lang-btn').textContent = t2.langBtn;
+  document.getElementById('txt-loading').textContent = t2.loading;
+  ['txt-prog-title','txt-title'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = t2.title; });
+  ['txt-prog-sub','txt-sub-closed'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = t2.sub; });
+  document.getElementById('txt-nights-label').textContent = t2.nightsLabel;
+  document.getElementById('txt-closed-title').textContent = t2.closedTitle;
+  document.getElementById('txt-closed-body').innerHTML = t2.closedBody;
+  document.getElementById('txt-submitted-title').textContent = t2.submittedTitle;
+  document.getElementById('txt-submitted-body').innerHTML = t2.submittedBody;
+  document.getElementById('txt-disc-intro').textContent = t2.discIntro;
+  const ul = document.getElementById('txt-disc-list');
+  ul.innerHTML = t2.discList.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('txt-sec-eligibility').textContent = t2.secEligibility;
+  document.getElementById('txt-chk-reservist').innerHTML = t2.chkReservist;
+  document.getElementById('txt-chk-couple').innerHTML = t2.chkCouple;
+  document.getElementById('txt-chk-rules').innerHTML = t2.chkRules;
+  document.getElementById('txt-chk-baby').innerHTML = t2.chkBaby;
+  document.getElementById('txt-sec-details').textContent = t2.secDetails;
+  document.getElementById('txt-lbl-name').textContent = t2.lblName;
+  document.getElementById('txt-lbl-phone').textContent = t2.lblPhone;
+  document.getElementById('txt-hint-phone').textContent = t2.hintPhone;
+  document.getElementById('txt-sec-dates').textContent = t2.secDates;
+  document.getElementById('txt-lbl-checkin').textContent = t2.lblCheckin;
+  document.getElementById('txt-lbl-checkout').textContent = t2.lblCheckout;
+  document.getElementById('txt-hint-dates').textContent = t2.hintDates;
+  document.getElementById('txt-sec-rooms').textContent = t2.secRooms;
+  document.getElementById('txt-lbl-room1').textContent = t2.lblRoom1;
+  document.getElementById('txt-lbl-room2').textContent = t2.lblRoom2;
+  document.getElementById('txt-lbl-room3').textContent = t2.lblRoom3;
+  document.getElementById('txt-sec-upload').textContent = t2.secUpload;
+  document.getElementById('txt-upload-main').textContent = t2.uploadMain;
+  document.getElementById('txt-upload-sub').textContent = t2.uploadSub;
+  document.getElementById('submit-btn').textContent = t2.submitBtn;
+}
+
+function toggleLang() {
+  lang = lang === 'he' ? 'en' : 'he';
+  applyLang();
+}
+
+// ── Show state ─────────────────────────────────────────────────────────────
+function showState(id) {
+  ['state-loading','state-closed','state-form','state-submitted'].forEach(s => {
+    document.getElementById(s).classList.toggle('active', s === id);
+  });
+}
+
+// ── Quota fetch ────────────────────────────────────────────────────────────
+async function loadQuota() {
+  if (BACKEND_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    // Dev preview mode
+    nightsRemaining = 9;
+    updateNightsUI();
+    showState('state-form');
+    return;
+  }
+  try {
+    const res = await fetch(BACKEND_URL);
+    const data = await res.json();
+    nightsRemaining = data.nightsRemaining;
+    if (!data.isOpen) { showState('state-closed'); return; }
+    updateNightsUI();
+    showState('state-form');
+  } catch(e) {
+    nightsRemaining = 9;
+    updateNightsUI();
+    showState('state-form');
+  }
+}
+
+function updateNightsUI() {
+  document.getElementById('nights-display').textContent = nightsRemaining;
+  const warn = document.getElementById('nights-warning');
+  if (nightsRemaining === 2) {
+    warn.textContent = t('nightsOnly2');
+    warn.classList.add('show');
+    // Disable 3-night stays by blocking checkout > checkin+2
+    const co = document.getElementById('inp-checkout');
+    co.max = getMaxCheckout(2);
+  } else {
+    warn.classList.remove('show');
+  }
+}
+
+// ── Date helpers ───────────────────────────────────────────────────────────
+function getMaxCheckout(maxNights) {
+  const ci = document.getElementById('inp-checkin').value;
+  if (!ci) return '';
+  const d = new Date(ci);
+  d.setDate(d.getDate() + maxNights);
+  return d.toISOString().split('T')[0];
+}
+
+function onDatesChange() {
+  const ci = document.getElementById('inp-checkin').value;
+  const co = document.getElementById('inp-checkout').value;
+  const errEl = document.getElementById('err-nights');
+  errEl.style.display = 'none';
+  if (!ci) return;
+  // Set min/max on checkout
+  const minD = new Date(ci); minD.setDate(minD.getDate() + 2);
+  const maxNights = nightsRemaining >= 3 ? 3 : 2;
+  const maxD = new Date(ci); maxD.setDate(maxD.getDate() + maxNights);
+  document.getElementById('inp-checkout').min = minD.toISOString().split('T')[0];
+  document.getElementById('inp-checkout').max = maxD.toISOString().split('T')[0];
+  if (ci && co) {
+    const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+    if (nights < 2 || nights > 3) {
+      errEl.textContent = t('errNights23');
+      errEl.style.display = 'block';
+    } else if (nights > nightsRemaining) {
+      errEl.textContent = t('errNightsMax');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+// ── Room selects ───────────────────────────────────────────────────────────
+function syncRooms(changed) {
+  const rooms = ['צביה','אריה','ליאנה','אביטל','אורלי'];
+  const v1 = document.getElementById('inp-room1').value;
+  const v2 = document.getElementById('inp-room2').value;
+  const v3 = document.getElementById('inp-room3').value;
+  const chosen = [v1, v2, v3].filter(Boolean);
+  [2,3].forEach(n => {
+    const sel = document.getElementById(`inp-room${n}`);
+    const cur = sel.value;
+    while(sel.options.length > 1) sel.remove(1);
+    rooms.forEach(r => {
+      const taken = chosen.filter(c => c === r).length;
+      const usedElsewhere = (n === 2 && r === v1) || (n === 3 && (r === v1 || r === v2));
+      if (!usedElsewhere || r === cur) {
+        const opt = new Option(r === 'צביה' ? 'צביה / Tzviya' : r === 'אריה' ? 'אריה / Aryeh' :
+          r === 'ליאנה' ? 'ליאנה / Liana' : r === 'אביטל' ? 'אביטל / Avital' : 'אורלי / Orly', r);
+        sel.add(opt);
+      }
+    });
+    if (cur && [...sel.options].some(o => o.value === cur)) sel.value = cur;
+  });
+}
+
+// ── File upload ────────────────────────────────────────────────────────────
+function onFileChosen() {
+  const file = document.getElementById('inp-file').files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    showFieldErr('err-file', 'הקובץ גדול מ-10MB');
+    return;
+  }
+  clearFieldErr('err-file');
+  document.getElementById('file-chosen-name').textContent = file.name;
+
+  if (file.type.startsWith('image/')) {
+    // Compress image
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 1200;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        imageData = canvas.toDataURL('image/jpeg', 0.82);
+        imageMime = 'image/jpeg';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    // PDF: send as-is
+    const reader = new FileReader();
+    reader.onload = e => {
+      imageData = e.target.result;
+      imageMime = file.type;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// ── Validation helpers ─────────────────────────────────────────────────────
+function showFieldErr(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.classList.add('show');
+}
+function clearFieldErr(id) {
+  const el = document.getElementById(id);
+  el.textContent = ''; el.classList.remove('show');
+}
+function fieldErr(inputId, errId, msg) {
+  document.getElementById(inputId).classList.add('err');
+  showFieldErr(errId, msg);
+  return false;
+}
+
+// ── Submit ─────────────────────────────────────────────────────────────────
+async function submitForm() {
+  // Clear errors
+  ['err-name','err-phone','err-checkin','err-checkout','err-room1','err-file'].forEach(clearFieldErr);
+  ['inp-name','inp-phone','inp-checkin','inp-checkout','inp-room1'].forEach(id => {
+    document.getElementById(id).classList.remove('err');
+  });
+  document.getElementById('form-err').classList.remove('show');
+
+  let valid = true;
+  const name = document.getElementById('inp-name').value.trim();
+  const phone = document.getElementById('inp-phone').value.trim();
+  const checkin = document.getElementById('inp-checkin').value;
+  const checkout = document.getElementById('inp-checkout').value;
+  const room1 = document.getElementById('inp-room1').value;
+
+  if (!name) { fieldErr('inp-name','err-name', t('errName')); valid = false; }
+  if (!phone || phone.length < 7) { fieldErr('inp-phone','err-phone', t('errPhone')); valid = false; }
+  if (!checkin) { fieldErr('inp-checkin','err-checkin', t('errCheckin')); valid = false; }
+  if (!checkout) { fieldErr('inp-checkout','err-checkout', t('errCheckout')); valid = false; }
+
+  const nights = checkin && checkout ? Math.round((new Date(checkout) - new Date(checkin)) / 86400000) : 0;
+  if (checkin && checkout) {
+    if (nights < 2 || nights > 3) {
+      showFieldErr('err-checkout', t('errNights23')); valid = false;
+    } else if (nights > nightsRemaining) {
+      showFieldErr('err-checkout', t('errNightsMax')); valid = false;
+    }
+  }
+  if (!room1) { fieldErr('inp-room1','err-room1', t('errRoom')); valid = false; }
+  if (!imageData) { showFieldErr('err-file', t('errFile')); valid = false; }
+
+  const checks = ['chk-reservist','chk-couple','chk-rules'];
+  if (!checks.every(id => document.getElementById(id).checked)) {
+    const el = document.getElementById('form-err');
+    el.textContent = t('errChecks');
+    el.classList.add('show');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = t('submitting');
+
+  const payload = {
+    name, phone, checkin, checkout, nights,
+    room1, room2: document.getElementById('inp-room2').value,
+    room3: document.getElementById('inp-room3').value,
+    imageData, imageMime,
+    lang,
+  };
+
+  if (BACKEND_URL === 'https://script.google.com/macros/s/AKfycbxFlwvSrvNyDleA3RQ5QaromJihw0a98lyK7HPDEfzbH0FZwRJ3aGkye5T_-41D4OMk/exec') {
+    // Preview mode
+    setTimeout(() => showState('state-submitted'), 1200);
+    return;
+  }
+
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      showState('state-submitted');
+    } else if (data.error === 'cycle_full') {
+      showState('state-closed');
+    } else if (data.error === 'not_enough_nights') {
+      nightsRemaining = data.nightsRemaining;
+      updateNightsUI();
+      const el = document.getElementById('form-err');
+      el.textContent = t('errNotEnough');
+      el.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = t('submitBtn');
+    } else {
+      throw new Error('unknown');
+    }
+  } catch(e) {
+    const el = document.getElementById('form-err');
+    el.textContent = t('errGeneral');
+    el.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = t('submitBtn');
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+const urlLang = new URLSearchParams(window.location.search).get('lang');
+if (urlLang === 'en') lang = 'en';
+applyLang();
+
+// Set min check-in to tomorrow
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+document.getElementById('inp-checkin').min = tomorrow.toISOString().split('T')[0];
+
+loadQuota();
+</script>
+</body>
+</html>
