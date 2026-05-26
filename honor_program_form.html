@@ -494,12 +494,26 @@ function updateNightsUI() {
 }
 
 // ── Date helpers ───────────────────────────────────────────────────────────
+// Timezone-safe: parse date string as local date, not UTC
+function parseLocalDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+function addDaysToStr(str, days) {
+  const d = parseLocalDate(str);
+  d.setDate(d.getDate() + days);
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+function nightsBetween(ci, co) {
+  return Math.round((parseLocalDate(co) - parseLocalDate(ci)) / 86400000);
+}
+
 function getMaxCheckout(maxNights) {
   const ci = document.getElementById('inp-checkin').value;
   if (!ci) return '';
-  const d = new Date(ci);
-  d.setDate(d.getDate() + maxNights);
-  return d.toISOString().split('T')[0];
+  return addDaysToStr(ci, maxNights);
 }
 
 function onDatesChange() {
@@ -508,14 +522,11 @@ function onDatesChange() {
   const errEl = document.getElementById('err-nights');
   errEl.style.display = 'none';
   if (!ci) return;
-  // Set min/max on checkout
-  const minD = new Date(ci); minD.setDate(minD.getDate() + 1);
   const maxNights = nightsRemaining >= 2 ? 2 : 1;
-  const maxD = new Date(ci); maxD.setDate(maxD.getDate() + maxNights);
-  document.getElementById('inp-checkout').min = minD.toISOString().split('T')[0];
-  document.getElementById('inp-checkout').max = maxD.toISOString().split('T')[0];
+  document.getElementById('inp-checkout').min = addDaysToStr(ci, 1);
+  document.getElementById('inp-checkout').max = addDaysToStr(ci, maxNights);
   if (ci && co) {
-    const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+    const nights = nightsBetween(ci, co);
     if (nights < 1 || nights > 2) {
       errEl.textContent = t('errNights23');
       errEl.style.display = 'block';
@@ -588,7 +599,7 @@ async function submitForm() {
   if (!checkin) { fieldErr('inp-checkin','err-checkin', t('errCheckin')); valid = false; }
   if (!checkout) { fieldErr('inp-checkout','err-checkout', t('errCheckout')); valid = false; }
 
-  const nights = checkin && checkout ? Math.round((new Date(checkout) - new Date(checkin)) / 86400000) : 0;
+  const nights = checkin && checkout ? nightsBetween(checkin, checkout) : 0;
   if (checkin && checkout) {
     if (nights < 1 || nights > 2) {
       showFieldErr('err-checkout', t('errNights23')); valid = false;
