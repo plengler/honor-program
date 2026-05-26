@@ -135,7 +135,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
   <!-- ── SUBMITTED ───────────────────────────────────────── -->
   <div class="state" id="state-submitted">
     <div class="prog-header">
-      <div class="prog-title">אורח כבוד</div>
+      <div class="prog-title" id="txt-submitted-prog-title">אורח כבוד</div>
     </div>
     <div class="state-center">
       <div class="state-icon">✉️</div>
@@ -166,8 +166,8 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
       <ul id="txt-disc-list">
         <li><strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לאנשים המעוניינים בסידור שינה נפרד.</li>
         <li><strong>תינוקות עד גיל שנה בלבד</strong> – ילד שיגיע מעל גיל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.</li>
-        <li><strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.</li>
-        <li>שהייה מינימלית: לילה אחד | מקסימלית: 2 לילות.</li>
+        <li><strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום לפחות בחלקו בכרטיס מילואים בצ׳ק-אין.</li>
+        <li>שהייה: לילה אחד או שניים.</li>
         <li>אישור תוך 48 שעות מהגשה. הזמנות מאושרות לפי סדר הגשה.</li>
         <li><a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank" id="txt-house-rules-link">כל תקנון הבית חל על שהייה זו ←</a></li>
       </ul>
@@ -301,22 +301,22 @@ const T = {
     title: 'אורח כבוד',
     sub: 'מלון בוטיק קריית האמנים, צפת',
     nightsLabel: 'לילות פנויים במחזור הנוכחי',
-    closedTitle: 'המחזור הנוכחי הגיע למכסתו',
-    closedBody: 'תודה על שירותך.<br>ניתן להירשם מחדש כאשר יפתח המחזור הבא.',
+    closedTitle: 'המחזור הנוכחי הסתיים',
+    closedBody: 'תודה על שירותך.',
     submittedTitle: 'בקשתך התקבלה',
-    submittedBody: 'תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.<br><br>חשוב: שלח/י תמונה של כרטיס המילואים לווצאפ <a href="https://wa.me/972586200779" style="color:var(--gold-dk)">+972-58-620-0779</a><br>ציין/י את שמך המלא בהודעה.',
-    discIntro: 'תוכנית זו מיועדת לחיילי מילואים פעילים ובני/בנות זוגם. שימו לב:',
+    submittedBody: 'תודה על שירותך למדינת ישראל.<br>נחזור אליך תוך 48 שעות.<br><br>חשוב: שלח/י תמונה של הוכחת השירות שלך לווצאפ <a href="https://wa.me/972586200779" style="color:var(--gold-dk)">+972-58-620-0779</a><br>ציין/י את שמך המלא בהודעה.',
+    discIntro: 'תוכנית זו מיועדת לאלו ששירתו בצבא הגנה לישראל. שימו לב:',
     discList: [
       '<strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לסידור שינה נפרד.',
-      '<strong>תינוקות עד גיל שנה בלבד</strong> – ילד מעל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.',
+      '<strong>תינוקות מתחת לגיל שנה בלבד</strong> – אנו לא יכולים לארח ילדים מעל גיל שנה.',
       '<strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.',
       'שהייה מינימלית: לילה אחד | מקסימלית: 2 לילות.',
       'אישור תוך 48 שעות. הזמנות לפי סדר הגשה.',
       '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">כל תקנון הבית חל ←</a>',
     ],
     secEligibility: 'תנאי זכאות',
-    chkReservist: 'אני חייל/ת מילואים פעיל/ה',
-    chkCouple: 'ההזמנה היא לזוג המשתף חדר עם מיטה זוגית אחת',
+    chkReservist: 'שירתי בצבא הגנה לישראל',
+    chkCouple: 'ההזמנה היא לאדם יחיד או לזוג המשתף חדר עם מיטה זוגית אחת',
     chkRules: 'קראתי ומסכים/ה ל<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">תקנון הבית</a>',
     chkBaby: 'אם יש ילד מלווה, הוא/היא מתחת לגיל 12 חודשים',
     secDetails: 'פרטים אישיים',
@@ -335,7 +335,7 @@ const T = {
     uploadMain: '📷 לחץ/י להעלאת תמונה או קובץ',
     uploadSub: 'תמונת כרטיס מילואים — JPG, PNG, PDF עד 10MB',
     submitBtn: 'שלח/י בקשה',
-    whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של כרטיס המילואים שלך לווצאפ:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>',
+    whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של הוכחת השירות שלך לווצאפ:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>',
     submitting: 'שולח...',
     nightsOnly2: 'נותר לילה אחד בלבד במחזור הנוכחי.',
     errName: 'נא להזין שם מלא',
@@ -358,22 +358,22 @@ const T = {
     title: 'Guest of Honor',
     sub: 'Artists\' Colony Inn, Tzfat',
     nightsLabel: 'nights available in current cycle',
-    closedTitle: 'This cycle is now full',
-    closedBody: 'Thank you for your service.<br>Registration will reopen for the next cycle.',
+    closedTitle: 'This cycle is now complete',
+    closedBody: 'Thank you for your service.',
     submittedTitle: 'Your application has been received',
     submittedBody: 'Thank you for your service to the State of Israel.<br>We will respond within 48 hours.<br><br>Important: please send a photo of your miluim card to WhatsApp <a href="https://wa.me/972586200779" style="color:var(--gold-dk)">+972-58-620-0779</a><br>Include your full name in the message.',
-    discIntro: 'This program is for active IDF reservists and their partners. Please note:',
+    discIntro: 'This program is for those who served in the IDF. Please note:',
     discList: [
       '<strong>Couples only</strong> – all rooms have one double bed. Not suitable for guests requiring separate sleeping arrangements.',
-      '<strong>Infants under 12 months only</strong> – a child over 12 months will result in cancellation of the reservation and refusal of entry.',
-      '<strong>Token contribution: ₪200 per night</strong>, payable by miluim card at check-in.',
-      'Minimum stay: 1 night | Maximum: 2 nights.',
+      '<strong>Infants under 12 months only</strong> – we cannot accommodate children over 1 year old.',
+      '<strong>Token contribution: ₪200 per night</strong>, payable at least in part by miluim card at check-in.',
+      'Stay: 1 or 2 nights.',
       'Response within 48 hours. Applications approved in order of submission.',
       '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">All house rules apply →</a>',
     ],
     secEligibility: 'Eligibility',
-    chkReservist: 'I am an active IDF reservist',
-    chkCouple: 'This booking is for a couple sharing one double-bed room',
+    chkReservist: 'I served in the IDF',
+    chkCouple: 'This booking is for a single person or a couple sharing one double-bed room',
     chkRules: 'I have read and agree to the <a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">house rules</a>',
     chkBaby: 'Any accompanying child is under 12 months of age',
     secDetails: 'Personal Details',
@@ -419,7 +419,7 @@ function applyLang() {
   const t2 = T[lang];
   document.getElementById('lang-btn').textContent = t2.langBtn;
   document.getElementById('txt-loading').textContent = t2.loading;
-  ['txt-prog-title','txt-title'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = t2.title; });
+  ['txt-prog-title','txt-title','txt-submitted-prog-title'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = t2.title; });
   ['txt-prog-sub','txt-sub-closed'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = t2.sub; });
   document.getElementById('txt-nights-label').textContent = t2.nightsLabel;
   document.getElementById('txt-closed-title').textContent = t2.closedTitle;
