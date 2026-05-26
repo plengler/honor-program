@@ -449,8 +449,6 @@ function applyLang() {
   document.getElementById('txt-lbl-room2').textContent = t2.lblRoom2;
   document.getElementById('txt-lbl-room3').textContent = t2.lblRoom3;
   document.getElementById('txt-sec-upload').textContent = t2.secUpload;
-  document.getElementById('txt-upload-main').textContent = t2.uploadMain;
-  document.getElementById('txt-upload-sub').textContent = t2.uploadSub;
   document.getElementById('submit-btn').textContent = t2.submitBtn;
 }
 
@@ -468,13 +466,6 @@ function showState(id) {
 
 // ── Quota fetch ────────────────────────────────────────────────────────────
 async function loadQuota() {
-  if (BACKEND_URL === 'https://script.google.com/macros/s/AKfycbxFlwvSrvNyDleA3RQ5QaromJihw0a98lyK7HPDEfzbH0FZwRJ3aGkye5T_-41D4OMk/exec') {
-    // Dev preview mode
-    nightsRemaining = 9;
-    updateNightsUI();
-    showState('state-form');
-    return;
-  }
   try {
     const res = await fetch(BACKEND_URL + '?action=quota');
     const data = await res.json();
@@ -580,7 +571,7 @@ function fieldErr(inputId, errId, msg) {
 // ── Submit ─────────────────────────────────────────────────────────────────
 async function submitForm() {
   // Clear errors
-  ['err-name','err-phone','err-checkin','err-checkout','err-room1','err-file'].forEach(clearFieldErr);
+  ['err-name','err-phone','err-checkin','err-checkout','err-room1'].forEach(clearFieldErr);
   ['inp-name','inp-phone','inp-checkin','inp-checkout','inp-room1'].forEach(id => {
     document.getElementById(id).classList.remove('err');
   });
@@ -627,15 +618,8 @@ async function submitForm() {
     name, phone, checkin, checkout, nights,
     room1, room2: document.getElementById('inp-room2').value,
     room3: document.getElementById('inp-room3').value,
-    imageData, imageMime,
     lang,
   };
-
-  if (BACKEND_URL === 'https://script.google.com/macros/s/AKfycbxFlwvSrvNyDleA3RQ5QaromJihw0a98lyK7HPDEfzbH0FZwRJ3aGkye5T_-41D4OMk/exec') {
-    // Preview mode
-    setTimeout(() => showState('state-submitted'), 1200);
-    return;
-  }
 
   try {
     // Send via GET with encoded params -- avoids all CORS issues with Apps Script
