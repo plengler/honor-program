@@ -275,11 +275,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
     <!-- WhatsApp photo notice -->
     <div class="sec">
       <div class="sec-title" id="txt-sec-upload">הוכחת שירות מילואים</div>
-      <div class="disc" id="txt-whatsapp-notice">
-        לאחר הגשת הטופס, שלח/י תמונה של כרטיס המילואים שלך לווצאפ:<br>
-        <strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br>
-        <span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>
-      </div>
+      <div class="disc" id="txt-whatsapp-notice"></div>
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="submitForm()" id="txt-submit-btn">שלח/י בקשה</button>
@@ -339,6 +335,7 @@ const T = {
     uploadMain: '📷 לחץ/י להעלאת תמונה או קובץ',
     uploadSub: 'תמונת כרטיס מילואים — JPG, PNG, PDF עד 10MB',
     submitBtn: 'שלח/י בקשה',
+    whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של כרטיס המילואים שלך לווצאפ:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>',
     submitting: 'שולח...',
     nightsOnly2: 'נותרו 2 לילות בלבד — ניתן להזמין שהייה של 2 לילות בלבד.',
     errName: 'נא להזין שם מלא',
@@ -395,6 +392,7 @@ const T = {
     uploadMain: '📷 Click to upload a photo or file',
     uploadSub: 'Miluim card photo — JPG, PNG, PDF up to 10MB',
     submitBtn: 'Submit Application',
+    whatsappNotice: 'After submitting, please send a photo of your miluim card to WhatsApp:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">Include your full name in the message. Your application will not be approved without proof of service.</span>',
     submitting: 'Submitting...',
     nightsOnly2: 'Only 2 nights remain — you may book a 2-night stay only.',
     errName: 'Please enter your full name',
@@ -449,6 +447,7 @@ function applyLang() {
   document.getElementById('txt-lbl-room2').textContent = t2.lblRoom2;
   document.getElementById('txt-lbl-room3').textContent = t2.lblRoom3;
   document.getElementById('txt-sec-upload').textContent = t2.secUpload;
+  document.getElementById('txt-whatsapp-notice').innerHTML = t2.whatsappNotice;
   document.getElementById('submit-btn').textContent = t2.submitBtn;
 }
 
