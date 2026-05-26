@@ -473,9 +473,9 @@ async function loadQuota() {
     updateNightsUI();
     showState('state-form');
   } catch(e) {
-    nightsRemaining = 9;
-    updateNightsUI();
-    showState('state-form');
+    // Don't guess -- show a neutral retry message
+    document.getElementById('txt-loading').textContent =
+      lang === 'he' ? 'שגיאה בטעינה. אנא רענן את הדף.' : 'Failed to load. Please refresh the page.';
   }
 }
 
@@ -649,7 +649,13 @@ async function submitForm() {
 
     if (data.success) {
       nightsRemaining = data.nightsRemaining;
-      showState('state-submitted');
+      if (nightsRemaining < 1) {
+        // Show submitted first, then after a moment note cycle is full
+        showState('state-submitted');
+        setTimeout(() => showState('state-closed'), 4000);
+      } else {
+        showState('state-submitted');
+      }
     } else if (data.error === 'cycle_full') {
       showState('state-closed');
     } else if (data.error === 'not_enough_nights') {
