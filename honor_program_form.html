@@ -167,7 +167,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
         <li><strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לאנשים המעוניינים בסידור שינה נפרד.</li>
         <li><strong>תינוקות עד גיל שנה בלבד</strong> – ילד שיגיע מעל גיל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.</li>
         <li><strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.</li>
-        <li>שהייה מינימלית: 2 לילות | מקסימלית: 3 לילות.</li>
+        <li>שהייה מינימלית: לילה אחד | מקסימלית: 2 לילות.</li>
         <li>אישור תוך 48 שעות מהגשה. הזמנות מאושרות לפי סדר הגשה.</li>
         <li><a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank" id="txt-house-rules-link">כל תקנון הבית חל על שהייה זו ←</a></li>
       </ul>
@@ -227,7 +227,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
           <div class="field-err" id="err-checkout"></div>
         </div>
       </div>
-      <div class="field-hint" id="txt-hint-dates">שהייה מינימלית 2 לילות, מקסימלית 3 לילות. אין צ׳ק-אין בשבת או חגים.</div>
+      <div class="field-hint" id="txt-hint-dates">שהייה מינימלית לילה אחד, מקסימלית 2 לילות. אין צ׳ק-אין בשבת או חגים.</div>
       <div class="field-err show" id="err-nights" style="display:none;"></div>
     </div>
 
@@ -310,7 +310,7 @@ const T = {
       '<strong>זוגות בלבד</strong> – כל החדרים כוללים מיטה זוגית אחת. לא מתאים לסידור שינה נפרד.',
       '<strong>תינוקות עד גיל שנה בלבד</strong> – ילד מעל 12 חודשים יגרום לביטול ההזמנה ואי-כניסה.',
       '<strong>השתתפות סמלית: ₪200 ללילה</strong>, לתשלום בכרטיס מילואים בצ׳ק-אין.',
-      'שהייה מינימלית: 2 לילות | מקסימלית: 3 לילות.',
+      'שהייה מינימלית: לילה אחד | מקסימלית: 2 לילות.',
       'אישור תוך 48 שעות. הזמנות לפי סדר הגשה.',
       '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">כל תקנון הבית חל ←</a>',
     ],
@@ -326,7 +326,7 @@ const T = {
     secDates: 'תאריכי שהייה',
     lblCheckin: 'תאריך כניסה',
     lblCheckout: 'תאריך יציאה',
-    hintDates: 'שהייה מינימלית 2 לילות, מקסימלית 3 לילות. אין צ׳ק-אין בשבת או חגים.',
+    hintDates: 'שהייה מינימלית לילה אחד, מקסימלית 2 לילות. אין צ׳ק-אין בשבת או חגים.',
     secRooms: 'העדפת חדרים',
     lblRoom1: 'עדיפות ראשונה',
     lblRoom2: 'עדיפות שנייה',
@@ -337,12 +337,12 @@ const T = {
     submitBtn: 'שלח/י בקשה',
     whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של כרטיס המילואים שלך לווצאפ:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>',
     submitting: 'שולח...',
-    nightsOnly2: 'נותרו 2 לילות בלבד — ניתן להזמין שהייה של 2 לילות בלבד.',
+    nightsOnly2: 'נותר לילה אחד בלבד במחזור הנוכחי.',
     errName: 'נא להזין שם מלא',
     errPhone: 'נא להזין מספר טלפון תקין',
     errCheckin: 'נא לבחור תאריך כניסה',
     errCheckout: 'נא לבחור תאריך יציאה',
-    errNights23: 'שהייה חייבת להיות 2 או 3 לילות',
+    errNights23: 'שהייה חייבת להיות 1 עד 2 לילות',
     errNightsMax: 'לא נותרו לילות מספיקים במחזור זה לשהייה המבוקשת',
     errRoom: 'נא לבחור עדיפות ראשונה לחדר',
     errFile: 'נא להעלות תעודת מילואים',
@@ -367,7 +367,7 @@ const T = {
       '<strong>Couples only</strong> – all rooms have one double bed. Not suitable for guests requiring separate sleeping arrangements.',
       '<strong>Infants under 12 months only</strong> – a child over 12 months will result in cancellation of the reservation and refusal of entry.',
       '<strong>Token contribution: ₪200 per night</strong>, payable by miluim card at check-in.',
-      'Minimum stay: 2 nights | Maximum: 3 nights.',
+      'Minimum stay: 1 night | Maximum: 2 nights.',
       'Response within 48 hours. Applications approved in order of submission.',
       '<a href="https://www.theartistscolonyinn.com/en/house-rules" target="_blank">All house rules apply →</a>',
     ],
@@ -383,7 +383,7 @@ const T = {
     secDates: 'Stay Dates',
     lblCheckin: 'Check-in date',
     lblCheckout: 'Check-out date',
-    hintDates: 'Minimum 2 nights, maximum 3 nights. No check-in on Shabbat or Jewish holidays.',
+    hintDates: 'Minimum 1 night, maximum 2 nights. No check-in on Shabbat or Jewish holidays.',
     secRooms: 'Room Preferences',
     lblRoom1: '1st choice',
     lblRoom2: '2nd choice',
@@ -394,12 +394,12 @@ const T = {
     submitBtn: 'Submit Application',
     whatsappNotice: 'After submitting, please send a photo of your miluim card to WhatsApp:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">Include your full name in the message. Your application will not be approved without proof of service.</span>',
     submitting: 'Submitting...',
-    nightsOnly2: 'Only 2 nights remain — you may book a 2-night stay only.',
+    nightsOnly2: 'Only 1 night remains in this cycle.',
     errName: 'Please enter your full name',
     errPhone: 'Please enter a valid phone number',
     errCheckin: 'Please select a check-in date',
     errCheckout: 'Please select a check-out date',
-    errNights23: 'Stay must be 2 or 3 nights',
+    errNights23: 'Stay must be 1 or 2 nights',
     errNightsMax: 'Not enough nights available in this cycle for your requested stay',
     errRoom: 'Please select a first room preference',
     errFile: 'Please upload your miluim card',
@@ -482,12 +482,12 @@ async function loadQuota() {
 function updateNightsUI() {
   document.getElementById('nights-display').textContent = nightsRemaining;
   const warn = document.getElementById('nights-warning');
-  if (nightsRemaining === 2) {
+  if (nightsRemaining === 1) {
     warn.textContent = t('nightsOnly2');
     warn.classList.add('show');
     // Disable 3-night stays by blocking checkout > checkin+2
     const co = document.getElementById('inp-checkout');
-    co.max = getMaxCheckout(2);
+    co.max = getMaxCheckout(1);
   } else {
     warn.classList.remove('show');
   }
@@ -509,14 +509,14 @@ function onDatesChange() {
   errEl.style.display = 'none';
   if (!ci) return;
   // Set min/max on checkout
-  const minD = new Date(ci); minD.setDate(minD.getDate() + 2);
-  const maxNights = nightsRemaining >= 3 ? 3 : 2;
+  const minD = new Date(ci); minD.setDate(minD.getDate() + 1);
+  const maxNights = nightsRemaining >= 2 ? 2 : 1;
   const maxD = new Date(ci); maxD.setDate(maxD.getDate() + maxNights);
   document.getElementById('inp-checkout').min = minD.toISOString().split('T')[0];
   document.getElementById('inp-checkout').max = maxD.toISOString().split('T')[0];
   if (ci && co) {
     const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
-    if (nights < 2 || nights > 3) {
+    if (nights < 1 || nights > 2) {
       errEl.textContent = t('errNights23');
       errEl.style.display = 'block';
     } else if (nights > nightsRemaining) {
@@ -590,7 +590,7 @@ async function submitForm() {
 
   const nights = checkin && checkout ? Math.round((new Date(checkout) - new Date(checkin)) / 86400000) : 0;
   if (checkin && checkout) {
-    if (nights < 2 || nights > 3) {
+    if (nights < 1 || nights > 2) {
       showFieldErr('err-checkout', t('errNights23')); valid = false;
     } else if (nights > nightsRemaining) {
       showFieldErr('err-checkout', t('errNightsMax')); valid = false;
