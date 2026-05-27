@@ -274,7 +274,7 @@ body { font-family: Arial, sans-serif; background: transparent; color: var(--ink
 
     <!-- WhatsApp photo notice -->
     <div class="sec">
-      <div class="sec-title" id="txt-sec-upload">הוכחת שירות מילואים</div>
+      <div class="sec-title" id="txt-sec-proof">הוכחת שירות מילואים</div>
       <div class="disc" id="txt-whatsapp-notice"></div>
     </div>
 
@@ -332,10 +332,8 @@ const T = {
     lblRoom2: 'עדיפות שנייה',
     lblRoom3: 'עדיפות שלישית',
     secUpload: 'הוכחת שירות מילואים',
-    uploadMain: '📷 לחץ/י להעלאת תמונה או קובץ',
-    uploadSub: 'תמונת כרטיס מילואים — JPG, PNG, PDF עד 10MB',
     submitBtn: 'שלח/י בקשה',
-    whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של הוכחת השירות שלך לווצאפ:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. הבקשה לא תאושר ללא הוכחת שירות.</span>',
+    whatsappNotice: 'לאחר הגשת הטופס, שלח/י תמונה של הוכחת שירותך בצה"ל לווצאפ: <strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong> תוך 24 שעות.<br><span style="font-size:11px;">ציין/י את שמך המלא בהודעה. בקשות ללא הוכחת שירות לא יטופלו.</span>',
     submitting: 'שולח...',
     nightsOnly2: 'נותר לילה אחד בלבד במחזור הנוכחי.',
     errName: 'נא להזין שם מלא',
@@ -345,7 +343,6 @@ const T = {
     errNights23: 'שהייה חייבת להיות 1 עד 2 לילות',
     errNightsMax: 'לא נותרו לילות מספיקים במחזור זה לשהייה המבוקשת',
     errRoom: 'נא לבחור עדיפות ראשונה לחדר',
-    errFile: 'נא להעלות תעודת מילואים',
     errChecks: 'יש לאשר את כל תנאי הזכאות',
     errGeneral: 'אירעה שגיאה. אנא נסה/י שוב.',
     errCycleFull: 'המחזור הנוכחי הגיע למכסתו. ההרשמה סגורה.',
@@ -389,10 +386,8 @@ const T = {
     lblRoom2: '2nd choice',
     lblRoom3: '3rd choice',
     secUpload: 'Proof of Reservist Service',
-    uploadMain: '📷 Click to upload a photo or file',
-    uploadSub: 'Miluim card photo — JPG, PNG, PDF up to 10MB',
     submitBtn: 'Submit Application',
-    whatsappNotice: 'After submitting, please send a photo of your miluim card to WhatsApp:<br><strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong><br><span style="font-size:11px;">Include your full name in the message. Your application will not be approved without proof of service.</span>',
+    whatsappNotice: 'After submitting, please send a photo of your proof of having served in the IDF to WhatsApp: <strong><a href="https://wa.me/972586200779" target="_blank">+972-58-620-0779</a></strong> within 24 hours.<br><span style="font-size:11px;">Include your full name in the message. Applications without proof of service will not be considered.</span>',
     submitting: 'Submitting...',
     nightsOnly2: 'Only 1 night remains in this cycle.',
     errName: 'Please enter your full name',
@@ -402,7 +397,6 @@ const T = {
     errNights23: 'Stay must be 1 or 2 nights',
     errNightsMax: 'Not enough nights available in this cycle for your requested stay',
     errRoom: 'Please select a first room preference',
-    errFile: 'Please upload your miluim card',
     errChecks: 'Please confirm all eligibility conditions',
     errGeneral: 'An error occurred. Please try again.',
     errCycleFull: 'This cycle is now full. Registration is closed.',
@@ -446,7 +440,7 @@ function applyLang() {
   document.getElementById('txt-lbl-room1').textContent = t2.lblRoom1;
   document.getElementById('txt-lbl-room2').textContent = t2.lblRoom2;
   document.getElementById('txt-lbl-room3').textContent = t2.lblRoom3;
-  document.getElementById('txt-sec-upload').textContent = t2.secUpload;
+  document.getElementById('txt-sec-proof').textContent = t2.secUpload;
   document.getElementById('txt-whatsapp-notice').innerHTML = t2.whatsappNotice;
   document.getElementById('submit-btn').textContent = t2.submitBtn;
 }
